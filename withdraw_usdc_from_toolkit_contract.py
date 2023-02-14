@@ -12,14 +12,14 @@ if __name__ == '__main__':
     toolkit_contract_address = ew3.eulith_contract_address(wallet.address)
     print("Proxy wallet address is: {}".format(proxy_contract_address))
 
-    token_to_withdraw = ew3.eulith_get_erc_token(TokenSymbol.WETH)
+    token_to_withdraw = ew3.eulith_get_erc_token(TokenSymbol.USDC)
 
     token_toolkit_balance = token_to_withdraw.balance_of(proxy_contract_address)
     token_toolkit_balance = token_toolkit_balance / token_to_withdraw.decimals
     print("\nBalance is {}".format(token_toolkit_balance))
 
     # withdraw the whole balance
-    amount_to_withdraw = token_toolkit_balance
+    amount_to_withdraw = 10
 
     tx = weth.approve(wallet.address, int(amount_to_withdraw * token_to_withdraw.decimals))
     rec = ew3.eth.send_transaction(tx)

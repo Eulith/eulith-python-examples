@@ -10,5 +10,6 @@ This repo contains short scripts that do basic things via eulith. These can be u
 2. Set wallet details in `config.py` (lines 26 & 27)
 3. Copy/paste your refresh token in `config.py` on line 30
 4. (optional) Set the network you wish to send transactions to, default is mainnet (line 29)
+5. Make sure you are using python -v 3.9 or earlier as web3.py doesn't work with python 3.11
 6. Run `python3 <file to execute>.py`
 
