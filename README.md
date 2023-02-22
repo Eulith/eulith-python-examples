@@ -1,15 +1,39 @@
 # Overview
-This repo contains short scripts that do basic things via eulith. These can be used as helper files, particularly if you are using a KMS wallet. Some examples:
+This repo contains short scripts that do basic things via Eulith. 
+
+These scripts are designed to give you a brief introduction to our services. We're always available to help
+you onboard & answer questions.
+
+Please note the examples contained in this repo do NOT constitute a comprehensive summary of our services. These
+are a few of the most simple possible building blocks we've chosen to demonstrate.
+
+You can see:
+
 * A basic swap
-* Getting the balance of an ERC 20 token
-* Testing KMS integration
-* Sending a transaction to an address
+* Some ERC20 handling
+* How to use a KMS wallet (recommended for production systematic signing)
+* Send transactions & interact with your toolkit contract
 
-# Instructions
-1. Run `pip install -r requirements.txt`, the main library here is eulith-web3
-2. Set wallet details in `config.py` (lines 26 & 27)
-3. Copy/paste your refresh token in `config.py` on line 30
-4. (optional) Set the network you wish to send transactions to, default is mainnet (line 29)
-5. Make sure you are using python -v 3.9 or earlier as web3.py doesn't work with python 3.11
-6. Run `python3 <file to execute>.py`
+# Run
+## 1. `./setup <EULITH_REFRESH_TOKEN>`
+## 2. `./run.sh`
 
+You can run a variety of Eulith examples from this script. Here are the options:
+1. -e   |  ERC20 handling
+2. -k   |  KMS
+3. -s   |  Swap 
+4. -t <TO_ADDRESS>  |  Simple Transfer
+5. -c               |  Transfer from toolkit contract
+
+If you would like to examine the code for the examples, have a look at the files in the examples folder.
+
+## Examples
+`./run.sh -e`
+
+`./run.sh -t 0xB6c0d1AC638e1Fe06dBBA649a727C8Ebd306A6c8`
+
+`./run.sh -k`
+
+`./run.sh -s`
+
+`./run.sh -c`
