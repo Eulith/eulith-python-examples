@@ -7,6 +7,7 @@ function show_help() {
   echo "  -s               |  Swap"
   echo "  -t <TO_ADDRESS>  |  Simple Transfer"
   echo "  -c               |  Transfer from toolkit contract"
+  echo "  -u               |  Get Uniswap quotes (float price and sqrt limit) for a given volume without executing the trade"
   echo -e "\nIf you would like to examine the code for the examples, have a look at the files in the examples folder.\n"
 }
 
@@ -21,7 +22,7 @@ fi
 
 source venv/bin/activate
 
-while getopts "h?ekst:c" opt; do
+while getopts "h?ekst:cu" opt; do
   case "$opt" in
     h|\?)
       show_help
@@ -37,5 +38,6 @@ while getopts "h?ekst:c" opt; do
       ;;
     c) python examples/transfer_from_toolkit.py
       ;;
+    u) python examples/uniswap_sqrtlimit_quote.py
   esac
 done
