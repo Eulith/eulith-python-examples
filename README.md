@@ -14,6 +14,7 @@ You can see:
 * How to use a KMS wallet (recommended for production systematic signing)
 * Send transactions & interact with your toolkit contract
 * Get quotes for Uniswap interactions
+* Making an atomic transaction
 
 # Run
 ## 1. `./setup.sh <EULITH_REFRESH_TOKEN>`
@@ -26,6 +27,7 @@ You can run a variety of Eulith examples from this script. Here are the options:
 4. -t <TO_ADDRESS>  |  Simple Transfer
 5. -c               |  Transfer from toolkit contract
 6. -u | Uniswap quoting (float price & sqrt limit price)
+7. -a   |  Atomic Transaction
 
 If you would like to examine the code for the examples, have a look at the files in the examples folder.
 
@@ -41,3 +43,5 @@ If you would like to examine the code for the examples, have a look at the files
 `./run.sh -c`
 
 `./run.sh -u`
+
+`./run.sh -a`
