@@ -42,9 +42,5 @@ while getopts "h?ekst:cua" opt; do
     u) python examples/uniswap_sqrtlimit_quote.py
       ;;
     a) python examples/atomic_transaction.py
-<<<<<<< HEAD
-=======
-      ;;
->>>>>>> ec2ddd8 (added atomic transaction example)
   esac
 done
