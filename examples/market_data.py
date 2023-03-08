@@ -41,6 +41,7 @@ def get_1inch_gas_cost_in_gwei():
     data = response.json()
     gas_price = int(data["tx"]["gasPrice"])
     gas_limit = int(data["tx"]["gas"])
+
     WEI_AND_GWEI_CONVERSION_RATE = 1e9
     gas_cost_in_gwei = (gas_price * gas_limit) / WEI_AND_GWEI_CONVERSION_RATE
     return gas_cost_in_gwei
