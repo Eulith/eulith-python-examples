@@ -25,6 +25,7 @@ fi
 source venv/bin/activate
 
 while getopts "h?ekst:cuam" opt; do
+while getopts "h?ekst:cua" opt; do
   case "$opt" in
     h|\?)
       show_help

@@ -44,6 +44,9 @@ if __name__ == '__main__':
     if source_wallet_balance < eth_needed + 0.0025:  # we don't have enough ETH to complete the tx
         print(f'You have insufficient balance to run this example. Please fund the test wallet with '
               f'at least {eth_needed + 0.0025} ETH')
+    if source_wallet_balance < eth_needed + 0.002:  # we don't have enough ETH to complete the tx
+        print(f'You have insufficient balance to run this example. Please fund the test wallet with '
+              f'at least {eth_needed + 0.002} ETH')
         exit(1)
 
     print(f'Sending {eth_needed} ETH to transaction 1 wallet address {t1_wallet_address} and '
