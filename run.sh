@@ -9,6 +9,7 @@ function show_help() {
   echo "  -c               |  Transfer from toolkit contract"
   echo "  -u               |  Get Uniswap quotes (float price and sqrt limit) for a given volume without executing the trade"
   echo "  -a               |  Atomic transaction(all or nothing individual transactions sent as a bundle)"
+  echo "  -m               |  Getting market data: prices, spread, gas fees, etc. Use for analysis"
   echo -e "\nIf you would like to examine the code for the examples, have a look at the files in the examples folder.\n"
 }
 
@@ -23,6 +24,7 @@ fi
 
 source venv/bin/activate
 
+while getopts "h?ekst:cuam" opt; do
 while getopts "h?ekst:cua" opt; do
   case "$opt" in
     h|\?)
@@ -42,6 +44,8 @@ while getopts "h?ekst:cua" opt; do
     u) python examples/uniswap_sqrtlimit_quote.py
       ;;
     a) python examples/atomic_transactions.py
+      ;;
+    m) python examples/market_data.py
       ;;
   esac
 done

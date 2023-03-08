@@ -41,6 +41,9 @@ if __name__ == '__main__':
     t2_wallet_address = '0x47256A41027e94d1141Dd06f05DcB3ddE0421551'  # second wallet destination address
 
     source_wallet_balance = ew3.eth.get_balance(wallet.address) / 1e18  # convert to a float value from wei
+    if source_wallet_balance < eth_needed + 0.0025:  # we don't have enough ETH to complete the tx
+        print(f'You have insufficient balance to run this example. Please fund the test wallet with '
+              f'at least {eth_needed + 0.0025} ETH')
     if source_wallet_balance < eth_needed + 0.002:  # we don't have enough ETH to complete the tx
         print(f'You have insufficient balance to run this example. Please fund the test wallet with '
               f'at least {eth_needed + 0.002} ETH')
