@@ -29,7 +29,7 @@ You can run a variety of Eulith examples from this script. Here are the options:
 5. -c               |  Transfer from toolkit contract
 6. -u | Uniswap quoting (float price & sqrt limit price)
 7. -a   |  Atomic Transaction
-8. -m   |  Market Data
+8. -m   |  Live Market Data
 
 
 If you would like to examine the code for the examples, have a look at the files in the examples folder.
