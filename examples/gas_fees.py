@@ -1,4 +1,3 @@
-from functools import reduce
 import os
 import sys
 
@@ -10,72 +9,82 @@ from utils.settings import PRIVATE_KEY, EULITH_REFRESH_TOKEN
 from utils.banner import print_banner
 
 
+"""
+Gas is the unit of measurement for the computational effort required to execute a transaction or contract on the 
+Ethereum blockchain. Every operation in a smart contract requires a certain amount of gas, as it is the cost of 
+computational resources for processing the logic within a transaction. Depending on ethereum blockchain traffic and 
+network congestion, baseFeePerGas can fluctuate.
+"""
+
 if __name__ == '__main__':
     print_banner()
 
     wallet = LocalSigner(PRIVATE_KEY)
     ew3 = EulithWeb3("https://eth-main.eulithrpc.com/v0", EULITH_REFRESH_TOKEN, construct_signing_middleware(wallet))
 
-    toolkit_contract_address = ew3.v0.ensure_toolkit_contract(wallet.address)
-
-    SELL_TOKEN = ew3.v0.get_erc_token(TokenSymbol.USDC)
-    BUY_TOKEN = ew3.v0.get_erc_token(TokenSymbol.WETH)
-
-    aggregator = EulithSwapProvider.ZERO_EX
-    gas_limit = 100000
-    gas_price = (ew3.eth.gas_price / 1e9) * gas_limit / 1e9
-    if aggregator == EulithSwapProvider.ZERO_EX:
-        gas_usage = 800000
-    elif aggregator == EulithSwapProvider.ONE_INCH:
-        gas_usage = 450000
+    # Can be used to convert from wei to gwei, or gwei to eth. Relation: 1 eth = 1e9 gwei = 1e18 wei
+    MIDDLE_UNIT_CONVERSION = 1e9
+    WEI_ETH_CONVERSION = 1e18
+    BLOCK_RANGE = 10
 
     GAS_FEE_MODES = {
         "slow": [10, 20, 30, 40, 50],
-        "normal": [10, 30, 50, 70, 90],
-        "fast": [50, 60, 70, 80, 90],
+        "normal": [0, 30, 50, 70, 100],
+        "fast": [50, 60, 70, 80, 90]
     }
+    speed = 'normal'  # default speed is set to normal, this is customizable
 
-    speed = 'normal'
-    block_range = 10
+    # Gas units are set based on past transaction spending averages for each type of transaction
+    transaction_gas_usage = {
+        "atomic_swap": 250000,
+        "deposit": 28000,
+        "token_transfer": 21000,
+        "contract_deposit": 40000,
+        "contract_withdrawal": 35000,
+        "toolkit_funding": 115000,
+        "contract_deployment": 500000
+    }
+    transaction_type = "token_transfer"
+
+    # Transaction gas limit is set to 2 times the estimated gas usage, as gas usage typically doesn't exceed it.
+    # Unused gas from a function is returned, however note that ant to maximize the number of transactions they can
+    # include in a block while also earning as much in transaction fees as possible so setting high gas limits may cause
+    # transactions to get stuck in the mempool
+    transaction_gas_limits = {transaction_type: gas_usage * 2 for transaction_type, gas_usage in
+                              transaction_gas_usage.items()}
+
     if speed not in GAS_FEE_MODES:
         raise ValueError("Speed values can be set to slow, normal, or fast")
 
-    base_fee = ew3.eth.get_block('pending').baseFeePerGas
-    estimated_next_base_fee = base_fee * 2
-    current_reward_history = ew3.eth.fee_history(block_range, 'pending', GAS_FEE_MODES[speed])['reward']
-    rewards = reduce(lambda x, y: x + y, current_reward_history)
-    average_reward = sum(rewards) // len(rewards)
-    max_priority_fee = average_reward
-    max_fee = average_reward + estimated_next_base_fee
+    pending_block_base_fee = (ew3.eth.get_block('pending').baseFeePerGas) / MIDDLE_UNIT_CONVERSION
 
-    print(f"Average gas fee for transactions with gas limit set to {gas_limit} is {gas_price:.5f} eth")
-    print(f"The estimated live maxPriorityFeePerGas is {max_priority_fee / 1e9:.5f} gwei and live maxFeePerGas is "
-          f"{max_fee / 1e9:.5f} gwei")
+    # For transactions to be included in a block, gas price must be at least equal to base fee reserve price, otherwise
+    # increasing by a maximum of 12.5% per block if the target block size is exceeded. next_block_max_base_fee is set
+    # to 125% of pending_block_base_fee to account for worst case scenario of high congestion
+    next_block_max_base_fee = pending_block_base_fee * 1.25
+    print(f"To include transactions, current pending block base fee per gas required to include transactions: {pending_block_base_fee:.2f} gwei."
+          f" Next block max base fee: {next_block_max_base_fee:.2f} gwei")
 
-    GWEI_AND_ETH_CONVERSION = 1e18
-    max_gas_price = 35000000000 # wei
-    max_gas_price = max_gas_price / GWEI_AND_ETH_CONVERSION # do this first to avoid multiplying large numbers
-    gas_cost_in_eth = max_gas_price * gas_usage
-    max_gas_price = max_gas_price * GWEI_AND_ETH_CONVERSION
+    next_block_gas_price = ew3.eth.gas_price / MIDDLE_UNIT_CONVERSION
+    print(f"Gas price to include transactions in the next block is {next_block_gas_price:.2f} gwei")
 
-    if SELL_TOKEN.address != "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2":
-        print(f"\nSell_token is {SELL_TOKEN.symbol}")
-        swap_params = EulithSwapRequest(
-            sell_token=SELL_TOKEN,
-            buy_token=BUY_TOKEN,
-            sell_amount=1.0)
+    fee_history = ew3.eth.fee_history(BLOCK_RANGE, 'pending', GAS_FEE_MODES[speed])
+    current_reward_history_flat = sum(fee_history['reward'], [])
+    average_miner_reward = sum(current_reward_history_flat) // len(current_reward_history_flat)
+    print(f"Average miner reward is {(average_miner_reward / MIDDLE_UNIT_CONVERSION):.2f} gwei")
 
-        try:
-            sell_token_to_eth_price, txs = ew3.v0.get_swap_quote(swap_params)
-        except EulithRpcException as e:
-            print(e)
-        gas_cost_in_sell_token = gas_cost_in_eth * GWEI_AND_ETH_CONVERSION
+    # Average priority fee could be negative if the next block gas price is lower than the pending block base fee.
+    # Note that If the total fee (base fee + priority fee) you offer for a transaction exceeds
+    # the maximum fee limit, the priority fee will be automatically reduced to fit within the limit. This means that
+    # the actual tip (priority fee) may be smaller than the one you specified, and under such circumstances, your
+    # transaction may become less attractive to miners for inclusion in the next block. Depending on frequency needs,
+    # find a balance between setting a reasonable fee and ensuring your transaction is confirmed quickly.
+    priority_fee = abs(next_block_gas_price - pending_block_base_fee)
+    print(f"Recommended max priority fee tip to miners: {priority_fee:.2f}")
 
-    else:
-        gas_cost_in_sell_token = gas_cost_in_eth
+    gas_usage = transaction_gas_usage[transaction_type] * (pending_block_base_fee + priority_fee)
+    gas_usage_limit = transaction_gas_limits[transaction_type] * (pending_block_base_fee + priority_fee)
+    print(f"For a {transaction_type} transaction, the gas usage is an estimated {(gas_usage / MIDDLE_UNIT_CONVERSION):.6f} eth "
+          f"and gas limit should be set to {(gas_usage_limit / MIDDLE_UNIT_CONVERSION):.6f} eth")
 
-    print(f"Estimated gas cost in {SELL_TOKEN.symbol} is {gas_cost_in_sell_token/1e18} eth")
-    print(f"The current block's baseFeePerGas is {base_fee / 1e9:.5f} gwei")
-    print(f"The estimated next block's baseFeePerGas is {estimated_next_base_fee / 1e9:.5f} gwei")
-    print(f"The reward history for the past {block_range} blocks with {speed} speed is: {current_reward_history}")
-    print(f"The average reward for the past {block_range} blocks with {speed} speed is: {average_reward / 1e9:.5f} gwei. This confirms the max priority fee of {max_priority_fee / 1e9} gwei")
+
