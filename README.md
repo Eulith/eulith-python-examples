@@ -54,4 +54,3 @@ If you would like to examine the code for the examples, have a look at the files
 `./run.sh -m`
 
 `./run.sh -g`
-

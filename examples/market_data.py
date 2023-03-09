@@ -31,6 +31,7 @@ if __name__ == '__main__':
             EulithLiquiditySource.SYNAPSE,
             EulithLiquiditySource.BALANCER_V1]
 
+
     weth = ew3.v0.get_erc_token(TokenSymbol.WETH)
     usdt = ew3.v0.get_erc_token(TokenSymbol.USDT)
     usdc = ew3.v0.get_erc_token(TokenSymbol.USDC)
@@ -58,7 +59,7 @@ if __name__ == '__main__':
 
     market_data = []
 
-    # For the same sell token usdc, we are iterating to see respective swap prices for the buy tokens in the tokens list
+    # for the same sell token usdc, we are iterating to see respective swap prices for the buy tokens in the tokens list
     for token in tokens:
         if token == SELL_TOKEN:
             continue
