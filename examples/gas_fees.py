@@ -80,7 +80,7 @@ if __name__ == '__main__':
     # transaction may become less attractive to miners for inclusion in the next block. Depending on frequency needs,
     # find a balance between setting a reasonable fee and ensuring your transaction is confirmed quickly.
     priority_fee = abs(next_block_gas_price - pending_block_base_fee)
-    print(f"Recommended max priority fee tip to miners: {priority_fee:.2f}")
+    print(f"Recommended priority fee tip to miners: {priority_fee:.2f}")
 
     gas_usage = transaction_gas_usage[transaction_type] * (pending_block_base_fee + priority_fee)
     gas_usage_limit = transaction_gas_limits[transaction_type] * (pending_block_base_fee + priority_fee)
