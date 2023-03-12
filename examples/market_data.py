@@ -18,8 +18,6 @@ if __name__ == '__main__':
     wallet = LocalSigner(PRIVATE_KEY)
     ew3 = EulithWeb3("https://eth-main.eulithrpc.com/v0", EULITH_REFRESH_TOKEN, construct_signing_middleware(wallet))
 
-    print("Refreshing User Data")
-
     print("\n\nRETRIEVING CURRENT LIVE MARKET DATA...")
 
     dexs = [EulithLiquiditySource.UNISWAP_V3,
@@ -33,24 +31,25 @@ if __name__ == '__main__':
             EulithLiquiditySource.SYNAPSE,
             EulithLiquiditySource.BALANCER_V1]
 
-    weth = ew3.eulith_get_erc_token(TokenSymbol.WETH)
-    usdt = ew3.eulith_get_erc_token(TokenSymbol.USDT)
-    usdc = ew3.eulith_get_erc_token(TokenSymbol.USDC)
-    link = ew3.eulith_get_erc_token(TokenSymbol.LINK)
-    matic = ew3.eulith_get_erc_token(TokenSymbol.MATIC)
-    bnb = ew3.eulith_get_erc_token(TokenSymbol.BNB)
-    busd = ew3.eulith_get_erc_token(TokenSymbol.BUSD)
-    steth = ew3.eulith_get_erc_token(TokenSymbol.STETH)
-    matic = ew3.eulith_get_erc_token(TokenSymbol.MATIC)
-    ldo = ew3.eulith_get_erc_token(TokenSymbol.LDO)
-    crv = ew3.eulith_get_erc_token(TokenSymbol.CRV)
-    cvx = ew3.eulith_get_erc_token(TokenSymbol.CVX)
-    badger = ew3.eulith_get_erc_token(TokenSymbol.BADGER)
-    bal = ew3.eulith_get_erc_token(TokenSymbol.BAL)
-    oneinch = ew3.eulith_get_erc_token(TokenSymbol.ONEINCH)
-    uni = ew3.eulith_get_erc_token(TokenSymbol.UNI)
-    ape = ew3.eulith_get_erc_token(TokenSymbol.APE)
-    gmt = ew3.eulith_get_erc_token(TokenSymbol.GMT)
+
+    weth = ew3.v0.get_erc_token(TokenSymbol.WETH)
+    usdt = ew3.v0.get_erc_token(TokenSymbol.USDT)
+    usdc = ew3.v0.get_erc_token(TokenSymbol.USDC)
+    link = ew3.v0.get_erc_token(TokenSymbol.LINK)
+    matic = ew3.v0.get_erc_token(TokenSymbol.MATIC)
+    bnb = ew3.v0.get_erc_token(TokenSymbol.BNB)
+    busd = ew3.v0.get_erc_token(TokenSymbol.BUSD)
+    steth = ew3.v0.get_erc_token(TokenSymbol.STETH)
+    matic = ew3.v0.get_erc_token(TokenSymbol.MATIC)
+    ldo = ew3.v0.get_erc_token(TokenSymbol.LDO)
+    crv = ew3.v0.get_erc_token(TokenSymbol.CRV)
+    cvx = ew3.v0.get_erc_token(TokenSymbol.CVX)
+    badger = ew3.v0.get_erc_token(TokenSymbol.BADGER)
+    bal = ew3.v0.get_erc_token(TokenSymbol.BAL)
+    oneinch = ew3.v0.get_erc_token(TokenSymbol.ONEINCH)
+    uni = ew3.v0.get_erc_token(TokenSymbol.UNI)
+    ape = ew3.v0.get_erc_token(TokenSymbol.APE)
+    gmt = ew3.v0.get_erc_token(TokenSymbol.GMT)
 
     SELL_TOKEN = usdc
     SELL_AMOUNT = 10
@@ -80,11 +79,11 @@ if __name__ == '__main__':
             )
 
             try:
-                price, txs = ew3.eulith_swap_quote(swap_params)
+                price, txs = ew3.v0.get_swap_quote(swap_params)
                 print(f"Price for {token.symbol} on {dex}: {price:.4f} USDC")
                 prices[dex] = price
             except EulithRpcException as e:
-                # if insufficient liquidity at the dex, we skip and try the next one
+                # If insufficient liquidity at the dex, we skip and try the next one
                 continue
 
         if prices:

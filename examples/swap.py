@@ -21,7 +21,6 @@ if __name__ == '__main__':
     print('Starting swap example...\n')
 
     weth = ew3.eulith_get_erc_token(TokenSymbol.WETH)
-    usdt = ew3.eulith_get_erc_token(TokenSymbol.USDT)
     usdc = ew3.eulith_get_erc_token(TokenSymbol.USDC)
 
     amount = 0.005

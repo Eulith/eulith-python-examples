@@ -16,6 +16,7 @@ You can see:
 * Get quotes for Uniswap interactions
 * Making an atomic transaction
 * Getting live market data
+* Transaction Gas Estimations
 
 # Run
 ## 1. `./setup.sh <EULITH_REFRESH_TOKEN>`
@@ -30,6 +31,7 @@ You can run a variety of Eulith examples from this script. Here are the options:
 6. -u | Uniswap quoting (float price & sqrt limit price)
 7. -a   |  Atomic Transaction
 8. -m   |  Live Market Data
+9. -g   |  Transaction Gas Estimates
 
 
 If you would like to examine the code for the examples, have a look at the files in the examples folder.
@@ -51,3 +53,4 @@ If you would like to examine the code for the examples, have a look at the files
 
 `./run.sh -m`
 
+`./run.sh -g`
