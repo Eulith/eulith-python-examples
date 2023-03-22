@@ -30,6 +30,7 @@ You can run a variety of Eulith examples from this script. Here are the options:
 6. -u | Uniswap quoting (float price & sqrt limit price)
 7. -a   |  Atomic Transaction
 8. -m   |  Live Market Data
+9. -p | Uniswap price streaming
 
 
 If you would like to examine the code for the examples, have a look at the files in the examples folder.
