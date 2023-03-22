@@ -49,5 +49,7 @@ while getopts "h?ekst:cuamp" opt; do
       ;;
     p) python examples/uniswap_price_streaming.py
       ;;
+    x) python examples/short.py
+      ;;
   esac
 done

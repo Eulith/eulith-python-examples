@@ -31,6 +31,7 @@ You can run a variety of Eulith examples from this script. Here are the options:
 7. -a   |  Atomic Transaction
 8. -m   |  Live Market Data
 9. -p | Uniswap price streaming
+10. -x | Open a short position on WETH with USDC collateral
 
 
 If you would like to examine the code for the examples, have a look at the files in the examples folder.
