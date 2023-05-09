@@ -11,6 +11,7 @@ function show_help() {
   echo "  -a               |  Atomic transaction (all or nothing individual transactions sent as a bundle)"
   echo "  -m               |  Getting DEX market data: prices, spread, gas fees, etc"
   echo "  -p               |  Stream prices from Uniswap pool"
+  echo "  -d               |  Defi Armor"
   echo -e "\nIf you would like to examine the code for the examples, have a look at the files in the examples folder.\n"
 }
 
@@ -25,7 +26,7 @@ fi
 
 source venv/bin/activate
 
-while getopts "h?ekst:cuamp" opt; do
+while getopts "h?ekst:cuampd" opt; do
   case "$opt" in
     h|\?)
       show_help
@@ -48,6 +49,8 @@ while getopts "h?ekst:cuamp" opt; do
     m) python examples/market_data.py
       ;;
     p) python examples/uniswap_price_streaming.py
+      ;;
+    d) python examples/defi_armor.py
       ;;
     x) python examples/short.py
       ;;
