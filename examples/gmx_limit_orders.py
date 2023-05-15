@@ -45,6 +45,6 @@ if __name__ == '__main__':
     h = gc.create_decrease_order(weth, weth, 5000, 2000, True, 2000)
     print(h.get('transactionHash').hex())
 
-    #  NOTE: The frontend won't let you submit both of these orders at the same time, but the contracts
-    #  don't mind. In other words, you can have a sell limit order pending at the same time as a buy limit order
-    #  of course, the sell won't execute unless the buy executes.
+    # NOTE: The frontend won't let you submit both of these orders at the same time, but the contracts
+    # don't mind. In other words, you can have a sell limit order pending at the same time as a buy limit order
+    # of course, the sell won't execute unless the buy executes.
