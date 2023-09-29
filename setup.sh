@@ -2,7 +2,7 @@
 
 if [ -z ${1+x} ]
 then
-  echo -e "Please give me your Eulith Refresh Token. For example, you can run \n\n./setup.sh <EULITH_REFRESH_TOKEN>\n"
+  echo -e "Please give me your Eulith Token. For example, you can run \n\n./setup.sh <EULITH_API_TOKEN>\n"
   exit 1
 fi
 

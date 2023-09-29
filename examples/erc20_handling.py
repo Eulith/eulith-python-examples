@@ -12,7 +12,7 @@ if __name__ == '__main__':
     print_banner()
 
     wallet = LocalSigner(PRIVATE_KEY)
-    ew3 = EulithWeb3("https://eth-main.eulithrpc.com/v0", EULITH_REFRESH_TOKEN, construct_signing_middleware(wallet))
+    ew3 = EulithWeb3("https://eth-main.eulithrpc.com/v0", EULITH_TOKEN, construct_signing_middleware(wallet))
 
     toolkit_contract_address = ew3.v0.ensure_toolkit_contract(wallet.address)
 

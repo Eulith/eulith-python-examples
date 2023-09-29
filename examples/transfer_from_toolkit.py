@@ -13,7 +13,7 @@ if __name__ == '__main__':
     print_banner()
 
     wallet = LocalSigner(PRIVATE_KEY)
-    ew3 = EulithWeb3("https://eth-main.eulithrpc.com/v0", EULITH_REFRESH_TOKEN, construct_signing_middleware(wallet))
+    ew3 = EulithWeb3("https://eth-main.eulithrpc.com/v0", EULITH_TOKEN, construct_signing_middleware(wallet))
 
     wallet_balance = ew3.eth.get_balance(wallet.address) / 10 ** 18
     if wallet_balance < 0.008:

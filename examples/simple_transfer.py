@@ -20,13 +20,13 @@ if __name__ == '__main__':
     print_banner()
 
     wallet = LocalSigner(PRIVATE_KEY)
-    ew3 = EulithWeb3("https://eth-main.eulithrpc.com/v0", EULITH_REFRESH_TOKEN, construct_signing_middleware(wallet))
+    ew3 = EulithWeb3("https://eth-main.eulithrpc.com/v0", EULITH_TOKEN, construct_signing_middleware(wallet))
 
     args = parser.parse_args()
     destination = ''
 
     try:
-        destination = ew3.toChecksumAddress(args.destination_wallet)
+        destination = ew3.to_checksum_address(args.destination_wallet)
     except ValueError:
         print(f'Failed to parse {args.destination_wallet} as a valid Ethereum address')
         exit(1)

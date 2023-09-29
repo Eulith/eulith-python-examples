@@ -2,3 +2,4 @@ utils/settings.py
 .idea
 utils/__pycache__/
 venv
+scratch.py

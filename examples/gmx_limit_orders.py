@@ -4,7 +4,7 @@ from eulith_web3.gmx import GMXClient
 from eulith_web3.signing import LocalSigner, construct_signing_middleware
 
 from utils.banner import print_banner
-from utils.settings import PRIVATE_KEY, EULITH_REFRESH_TOKEN
+from utils.settings import PRIVATE_KEY, EULITH_TOKEN
 
 if __name__ == '__main__':
     print_banner()
