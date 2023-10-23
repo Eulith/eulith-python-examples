@@ -10,56 +10,46 @@ from utils.settings import *
 
 if __name__ == '__main__':
     """
-    Depending on what you'd like to do, you may need to modify this script with:
+    Note this example requires you to have DeFi armor set up.
     
-    1. Adding the safe address to ew3.v0.start_atomic_transaction(wallet.address, SAFE_ADDRESS)
-    2. Change the network where it says https://eth-main.eulithrpc.com/v0
+    Please see https://github.com/Eulith/armor-cli for more instructions.
+    
+    You can also select which network you would like to operate on by changing the subdomain of the Eulith RPC
+    endpoint https://eth-main.eulithrpc.com/v0. 
+    
+    For example, you might want to execute on Arbitrum. In that case, you should use https://arb-main.eulithrpc.com/v0
     """
 
     print_banner()
 
     wallet = LocalSigner(PRIVATE_KEY)
-    ew3 = EulithWeb3("https://eth-main.eulithrpc.com/v0", EULITH_TOKEN, construct_signing_middleware(wallet))
+    with EulithWeb3("https://arb-main.eulithrpc.com/v0", EULITH_TOKEN, construct_signing_middleware(wallet)) as ew3:
+        if ew3.eth.get_balance(wallet.address) / 10 ** 18 < 0.03:
+            print("Your wallet doesn't have enough balance to complete this example")
+            print("Please deposit at least 0.02 ETH")
+            exit(1)
 
-    if ew3.eth.get_balance(wallet.address) / 10 ** 18 < 0.03:
-        print("Your wallet doesn't have enough balance to complete this example")
-        print("Please deposit at least 0.02 ETH")
+        print('Starting swap example...\n')
 
-    print('Starting swap example...\n')
+        weth = ew3.eulith_get_erc_token(TokenSymbol.WETH)
+        usdc = ew3.eulith_get_erc_token(TokenSymbol.USDC)
 
-    weth = ew3.eulith_get_erc_token(TokenSymbol.WETH)
-    usdc = ew3.eulith_get_erc_token(TokenSymbol.USDC)
+        amount = 2
 
-    amount = 0.005
+        swap = EulithSwapRequest(
+            sell_token=usdc,
+            buy_token=weth,
+            sell_amount=amount)
 
-    swap = EulithSwapRequest(
-        sell_token=weth,
-        buy_token=usdc,
-        sell_amount=amount)
+        armor, safe = ew3.v0.get_armor_and_safe_addresses(wallet.address)
 
-    toolkit_address = ew3.v0.ensure_toolkit_contract(wallet.address)
-    toolkit_sell_token_balance = weth.balance_of_float(toolkit_address)
+        ew3.v0.start_atomic_transaction(wallet.address, gnosis=safe)
 
-    if toolkit_sell_token_balance < amount:
-        deposit_tx = weth.deposit_eth(amount, {'from': wallet.address, 'gas': 100000})
-        deposit_hash = ew3.eth.send_transaction(deposit_tx)
-        print(f'Converting ETH to WETH: {deposit_hash.hex()}')
-        ew3.eth.wait_for_transaction_receipt(deposit_hash)
+        price, _ = ew3.v0.get_swap_quote(swap)
 
-        transfer_to_toolkit_contract = weth.transfer_float(
-            toolkit_address, amount, {'from': wallet.address, 'gas': 100000})
-        transfer_hash = ew3.eth.send_transaction(transfer_to_toolkit_contract)
-        print(f'Sending enough WETH to the toolkit contract to cover the swap: {transfer_hash.hex()}')
-        ew3.eth.wait_for_transaction_receipt(transfer_hash)
+        print(f'Swapping at price: {round(price, 5)} USDC per WETH')
 
-    ew3.v0.start_atomic_transaction(wallet.address)
-    price, txs = ew3.v0.get_swap_quote(swap)
+        final_tx = ew3.v0.commit_atomic_transaction()
+        rec = ew3.eth.send_transaction(final_tx)
 
-    print(f'Swapping at price: {round(price, 5)} WETH per USDC')
-
-    ew3.v0.send_multi_transaction(txs)
-
-    final_tx = ew3.v0.commit_atomic_transaction()
-    rec = ew3.eth.send_transaction(final_tx)
-
-    print(f"\nSwap tx hash: {rec.hex()}")
+        print(f"\nSwap tx hash: {rec.hex()}")
