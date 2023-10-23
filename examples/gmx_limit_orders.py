@@ -15,7 +15,7 @@ if __name__ == '__main__':
 
     # Don't use this in production. Use KMSSigner() instead. You can test with this or with LedgerSigner()
     wallet = LocalSigner(PRIVATE_KEY)
-    ew3 = EulithWeb3("https://arb-main.eulithrpc.com/v0", EULITH_REFRESH_TOKEN, construct_signing_middleware(wallet))
+    ew3 = EulithWeb3("https://arb-main.eulithrpc.com/v0", EULITH_TOKEN, construct_signing_middleware(wallet))
 
     gc = GMXClient(ew3)
 

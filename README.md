@@ -18,7 +18,7 @@ You can see:
 * Getting live market data
 
 # Run
-## 1. `./setup.sh <EULITH_REFRESH_TOKEN>`
+## 1. `./setup.sh <EULITH_TOKEN>`
 ## 2. `./run.sh`
 
 You can run a variety of Eulith examples from this script. Here are the options:

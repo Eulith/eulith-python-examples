@@ -16,6 +16,6 @@ if __name__ == '__main__':
     if not os.path.isfile('utils/settings.py'):
         with open('utils/settings.py', 'w+') as file:
             file.write(f'PRIVATE_KEY = "{private_key}"\n')
-            file.write(f'EULITH_REFRESH_TOKEN = "{refresh_token}"\n')
+            file.write(f'EULITH_TOKEN = "{refresh_token}"\n')
     else:
         print('utils/settings.py file already exists. not going to overwrite with a new key.')
