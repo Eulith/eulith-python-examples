@@ -3,13 +3,19 @@ import sys
 
 from eulith_web3.eulith_web3 import *
 from eulith_web3.signing import construct_signing_middleware, LocalSigner
-from eulith_web3.swap import EulithSwapProvider
 
 sys.path.insert(0, os.getcwd())
 from utils.banner import print_banner
 from utils.settings import *
 
 if __name__ == '__main__':
+    """
+    Depending on what you'd like to do, you may need to modify this script with:
+    
+    1. Adding the safe address to ew3.v0.start_atomic_transaction(wallet.address, SAFE_ADDRESS)
+    2. Change the network where it says https://eth-main.eulithrpc.com/v0
+    """
+
     print_banner()
 
     wallet = LocalSigner(PRIVATE_KEY)
@@ -22,7 +28,6 @@ if __name__ == '__main__':
     print('Starting swap example...\n')
 
     weth = ew3.eulith_get_erc_token(TokenSymbol.WETH)
-    usdt = ew3.eulith_get_erc_token(TokenSymbol.USDT)
     usdc = ew3.eulith_get_erc_token(TokenSymbol.USDC)
 
     amount = 0.005
@@ -30,9 +35,7 @@ if __name__ == '__main__':
     swap = EulithSwapRequest(
         sell_token=weth,
         buy_token=usdc,
-        sell_amount=amount,
-        recipient=wallet.address,
-        route_through=EulithSwapProvider.ONE_INCH)
+        sell_amount=amount)
 
     toolkit_address = ew3.v0.ensure_toolkit_contract(wallet.address)
     toolkit_sell_token_balance = weth.balance_of_float(toolkit_address)
