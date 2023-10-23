@@ -10,14 +10,12 @@ from utils.settings import *
 
 if __name__ == '__main__':
     """
-    Note this example requires you to have DeFi armor set up.
-    
-    Please see https://github.com/Eulith/armor-cli for more instructions.
+    Note this example requires you to have DeFi armor set up. You can do this through the frontend
+    at https://eulithclient.com. Alternatively, please see https://github.com/Eulith/armor-cli for more instructions.
     
     You can also select which network you would like to operate on by changing the subdomain of the Eulith RPC
-    endpoint https://eth-main.eulithrpc.com/v0. 
-    
-    For example, you might want to execute on Arbitrum. In that case, you should use https://arb-main.eulithrpc.com/v0
+    endpoint https://eth-main.eulithrpc.com/v0. For example, you might want to execute on Arbitrum. 
+    In that case, you should use https://arb-main.eulithrpc.com/v0
     """
 
     print_banner()
