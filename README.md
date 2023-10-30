@@ -24,15 +24,16 @@ You can see:
 You can run a variety of Eulith examples from this script. Here are the options:
 1. -e   |  ERC20 handling
 2. -k   |  KMS
-3. -s   |  Swap 
-4. -t <TO_ADDRESS>  |  Simple Transfer
-5. -c               |  Transfer from toolkit contract
-6. -u | Uniswap quoting (float price & sqrt limit price)
-7. -a   |  Atomic Transaction
-8. -m   |  Live Market Data
-9. -p | Uniswap price streaming
-10. -x | Open a short position on WETH with USDC collateral
-11. -d | Demonstrate DefiArmor (WARNING: this is expensive)
+3. -s   |  Swap For Armor
+4. -w   |  Swap for Wallet
+5. -t <TO_ADDRESS>  |  Simple Transfer
+6. -c               |  Transfer from toolkit contract
+7. -u | Uniswap quoting (float price & sqrt limit price)
+8. -a   |  Atomic Transaction
+9. -m   |  Live Market Data
+10. -p | Uniswap price streaming
+11. -x | Open a short position on WETH with USDC collateral
+12. -d | Demonstrate DefiArmor (WARNING: this is expensive)
 
 
 If you would like to examine the code for the examples, have a look at the files in the examples folder.
@@ -54,3 +55,4 @@ If you would like to examine the code for the examples, have a look at the files
 
 `./run.sh -m`
 
+`./run.sh -w`

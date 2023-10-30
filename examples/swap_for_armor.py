@@ -7,6 +7,7 @@ from eulith_web3.signing import construct_signing_middleware, LocalSigner
 sys.path.insert(0, os.getcwd())
 from utils.banner import print_banner
 from utils.settings import *
+from utils.common import check_wallet_balance
 
 if __name__ == '__main__':
     """
@@ -22,10 +23,7 @@ if __name__ == '__main__':
 
     wallet = LocalSigner(PRIVATE_KEY)
     with EulithWeb3("https://arb-main.eulithrpc.com/v0", EULITH_TOKEN, construct_signing_middleware(wallet)) as ew3:
-        if ew3.eth.get_balance(wallet.address) / 10 ** 18 < 0.03:
-            print("Your wallet doesn't have enough balance to complete this example")
-            print("Please deposit at least 0.02 ETH")
-            exit(1)
+        check_wallet_balance(ew3, 0.03)
 
         print('Starting swap example...\n')
 

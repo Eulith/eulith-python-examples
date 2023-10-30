@@ -26,7 +26,7 @@ fi
 
 source venv/bin/activate
 
-while getopts "h?ekst:cuampd" opt; do
+while getopts "h?ekst:cuampdw" opt; do
   case "$opt" in
     h|\?)
       show_help
@@ -36,7 +36,9 @@ while getopts "h?ekst:cuampd" opt; do
       ;;
     k) python examples/kms_signer.py
       ;;
-    s) python examples/swap.py
+    s) python examples/swap_for_armor.py
+      ;;
+    w) python examples/swap_for_wallet.py
       ;;
     t) run_simple_transfer $OPTARG
       ;;
