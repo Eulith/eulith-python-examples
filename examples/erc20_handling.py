@@ -12,10 +12,9 @@ if __name__ == '__main__':
     print_banner()
 
     wallet = LocalSigner(PRIVATE_KEY)
-    ew3 = EulithWeb3("https://eth-main.eulithrpc.com/v0", EULITH_TOKEN, construct_signing_middleware(wallet))
+    with EulithWeb3("https://eth-main.eulithrpc.com/v0", EULITH_TOKEN, construct_signing_middleware(wallet)) as ew3:
+        weth = ew3.v0.get_erc_token(TokenSymbol.WETH)
 
-    weth = ew3.v0.get_erc_token(TokenSymbol.WETH)
+        wallet_weth_balance = weth.balance_of_float(wallet.address)
 
-    wallet_weth_balance = weth.balance_of_float(wallet.address)
-
-    print(f'Wallet WETH balance: {wallet_weth_balance}')
+        print(f'Wallet WETH balance: {wallet_weth_balance}')
