@@ -42,4 +42,6 @@ if __name__ == '__main__':
         ew3.v0.subscribe_pending_transactions(pending_tx_handler)
 
         while True:
+            # Just want to keep the main thread alive to allow the subscription thread to run
+            # You can CRTL-c to exit
             time.sleep(1)
