@@ -20,34 +20,33 @@ if __name__ == '__main__':
     print_banner()
 
     wallet = LocalSigner(PRIVATE_KEY)
-    ew3 = EulithWeb3("https://eth-main.eulithrpc.com/v0", EULITH_TOKEN, construct_signing_middleware(wallet))
+    with EulithWeb3("https://eth-main.eulithrpc.com/v0", EULITH_TOKEN, construct_signing_middleware(wallet)) as ew3:
+        args = parser.parse_args()
+        destination = ''
 
-    args = parser.parse_args()
-    destination = ''
+        try:
+            destination = ew3.to_checksum_address(args.destination_wallet)
+        except ValueError:
+            print(f'Failed to parse {args.destination_wallet} as a valid Ethereum address')
+            exit(1)
 
-    try:
-        destination = ew3.to_checksum_address(args.destination_wallet)
-    except ValueError:
-        print(f'Failed to parse {args.destination_wallet} as a valid Ethereum address')
-        exit(1)
+        amount_in_eth = 0.001
 
-    amount_in_eth = 0.001
+        source_wallet_balance = ew3.eth.get_balance(wallet.address) / 1e18  # convert to a float value from wei
+        if source_wallet_balance < amount_in_eth + 0.002:  # we don't have enough ETH to complete the tx
+            print(f'You have insufficient balance to run this example. Please fund the test wallet with '
+                  f'at least {amount_in_eth + 0.002} ETH')
+            exit(1)
 
-    source_wallet_balance = ew3.eth.get_balance(wallet.address) / 1e18  # convert to a float value from wei
-    if source_wallet_balance < amount_in_eth + 0.002:  # we don't have enough ETH to complete the tx
-        print(f'You have insufficient balance to run this example. Please fund the test wallet with '
-              f'at least {amount_in_eth + 0.002} ETH')
-        exit(1)
+        print(f'Sending {amount_in_eth} ETH to: {destination}')
 
-    print(f'Sending {amount_in_eth} ETH to: {destination}')
+        try:
+            tx_hash = ew3.eth.send_transaction({
+                'from': wallet.address,
+                'to': destination,
+                'value': hex(int(amount_in_eth * 1e18))
+            })
 
-    try:
-        tx_hash = ew3.eth.send_transaction({
-            'from': wallet.address,
-            'to': destination,
-            'value': hex(int(amount_in_eth * 1e18))
-        })
-
-        print(f'Tx hash: {tx_hash.hex()}')
-    except EulithRpcException:
-        print('Looks like you dont have enough gas to complete this tx. Please fund the wallet a bit more.')
+            print(f'Tx hash: {tx_hash.hex()}')
+        except EulithRpcException:
+            print('Looks like you dont have enough gas to complete this tx. Please fund the wallet a bit more.')
