@@ -19,15 +19,14 @@ class MyCustomStreamHandler(EulithWebsocketRequestHandler):
         self.ew3 = ew3
 
     def handle_result(self, message: Dict):
-        result = message.get('result', {})
+        result = message.get('params', {}).get('result', {})
         if type(result) == dict:
             data = result.get('data', None)
-            sub_id = result.get('subscription', None)
-            if data and sub_id:
+            if data:
                 price = data.get('price', None)
                 block_number = data.get('block_number')
 
-                print(f'Received price {price} at block {block_number}')
+                print(f'Received price {1 / price} USDC/WETH at block {block_number}')
 
     def handle_error(self, message: Dict):
         print(f'received an error {message}')
